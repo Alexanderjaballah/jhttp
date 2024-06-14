@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_jhttp_1718358274303-push-trigger-input-set
+  identifier: Build_jhttp_1718358274303pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: JHTTP
+  pipeline:
+    identifier: Build_jhttp_1718358274303
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
