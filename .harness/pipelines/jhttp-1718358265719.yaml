@@ -83,6 +83,8 @@ pipeline:
                     approvers:
                       userGroups:
                         - account._account_all_users
+                        - _project_all_users
+                        - org._organization_all_users
                       minimumCount: 1
                       disallowPipelineExecutor: false
                     approverInputs: []
