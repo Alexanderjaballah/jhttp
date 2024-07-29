@@ -36,7 +36,7 @@ pipeline:
                     connectorRef: account.harnessImage
                     repo: alexjaballah/jhttp
                     tags:
-                      - latest
+                      - <+pipeline.sequenceId>
           platform:
             os: Linux
             arch: Amd64
