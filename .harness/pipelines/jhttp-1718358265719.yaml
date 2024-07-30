@@ -45,7 +45,7 @@ pipeline:
             spec: {}
         type: CI
     - stage:
-        name: deploy
+        name: deploydev
         identifier: deploy
         description: ""
         type: Deployment
