@@ -1,6 +1,6 @@
 pipeline:
   identifier: Build_jhttp_1718358274303
-  name: Build jhttp
+  name: Build and Deploy jhttp
   orgIdentifier: default
   projectIdentifier: JHTTP
   properties:
@@ -221,3 +221,4 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
+  tags: {}
