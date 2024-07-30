@@ -45,8 +45,8 @@ pipeline:
             spec: {}
         type: CI
     - stage:
-        name: deploydev
-        identifier: deploy
+        name: deploy dev
+        identifier: deploy_dev
         description: ""
         type: Deployment
         spec:
@@ -60,66 +60,22 @@ pipeline:
               - identifier: harnessk8sinfra
           execution:
             steps:
-              - stepGroup:
-                  name: Canary Deployment
-                  identifier: canaryDeployment
-                  steps:
-                    - step:
-                        name: Canary Deployment
-                        identifier: canaryDeployment
-                        type: K8sCanaryDeploy
-                        timeout: 10m
-                        spec:
-                          instanceSelection:
-                            type: Count
-                            spec:
-                              count: 1
-                          skipDryRun: false
-                    - step:
-                        type: HarnessApproval
-                        name: Verify Canary
-                        identifier: Verify_Canary
-                        spec:
-                          approvalMessage: Please review the following information and approve the pipeline progression
-                          includePipelineExecutionHistory: true
-                          isAutoRejectEnabled: false
-                          approvers:
-                            userGroups:
-                              - _project_all_users
-                            minimumCount: 1
-                            disallowPipelineExecutor: false
-                          approverInputs: []
-                        timeout: 1d
-                    - step:
-                        name: Canary Delete
-                        identifier: canaryDelete
-                        type: K8sCanaryDelete
-                        timeout: 10m
-                        spec: {}
-              - stepGroup:
-                  name: Primary Deployment
-                  identifier: primaryDeployment
-                  steps:
-                    - step:
-                        name: Rolling Deployment
-                        identifier: rollingDeployment
-                        type: K8sRollingDeploy
-                        timeout: 10m
-                        spec:
-                          skipDryRun: false
+              - step:
+                  name: Rollout Deployment
+                  identifier: rolloutDeployment
+                  type: K8sRollingDeploy
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
+                    pruningEnabled: false
             rollbackSteps:
               - step:
-                  name: Canary Delete
-                  identifier: rollbackCanaryDelete
-                  type: K8sCanaryDelete
-                  timeout: 10m
-                  spec: {}
-              - step:
-                  name: Rolling Rollback
-                  identifier: rollingRollback
+                  name: Rollback Rollout Deployment
+                  identifier: rollbackRolloutDeployment
                   type: K8sRollingRollback
                   timeout: 10m
-                  spec: {}
+                  spec:
+                    pruningEnabled: false
         tags: {}
         failureStrategies:
           - onFailure:
@@ -128,7 +84,7 @@ pipeline:
               action:
                 type: StageRollback
     - stage:
-        name: ApprovalGateway
+        name: Prod Approval
         identifier: ApprovalGateway
         description: ""
         type: Approval
@@ -184,6 +140,21 @@ pipeline:
                             spec:
                               count: 1
                           skipDryRun: false
+                    - step:
+                        type: HarnessApproval
+                        name: Canary Verify
+                        identifier: Canary_Verify
+                        spec:
+                          approvalMessage: Please review the following information and approve the pipeline progression
+                          includePipelineExecutionHistory: true
+                          isAutoRejectEnabled: false
+                          approvers:
+                            userGroups:
+                              - _project_all_users
+                            minimumCount: 1
+                            disallowPipelineExecutor: false
+                          approverInputs: []
+                        timeout: 1d
                     - step:
                         name: Canary Delete
                         identifier: canaryDelete
