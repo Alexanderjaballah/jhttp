@@ -12,17 +12,18 @@ pipeline:
   stages:
     - stage:
         identifier: build
-        name: build
+        name: Code Checkout and Build
         spec:
           caching:
             enabled: true
+            paths: []
           cloneCodebase: true
           execution:
             steps:
               - step:
                   type: Run
                   identifier: build_java_app
-                  name: Build Java App
+                  name: Build Java Application
                   spec:
                     shell: Sh
                     command: |-
@@ -30,7 +31,7 @@ pipeline:
                       mvn -B package --file pom.xml
               - step:
                   type: BuildAndPushDockerRegistry
-                  name: BuildAndPushDockerRegistry_1
+                  name: Build and Push Docker Image
                   identifier: BuildAndPushDockerRegistry_1
                   spec:
                     connectorRef: docker_connection
@@ -44,8 +45,9 @@ pipeline:
             type: Cloud
             spec: {}
         type: CI
+        description: ""
     - stage:
-        name: deploy dev
+        name: Development Environment
         identifier: deploy_dev
         description: ""
         type: Deployment
@@ -84,7 +86,7 @@ pipeline:
               action:
                 type: StageRollback
     - stage:
-        name: Prod Approval
+        name: Approval for Production
         identifier: ApprovalGateway
         description: ""
         type: Approval
@@ -92,7 +94,7 @@ pipeline:
           execution:
             steps:
               - step:
-                  name: Prodapproval
+                  name: Manual Approval
                   identifier: Prodapproval
                   type: HarnessApproval
                   timeout: 1d
@@ -110,7 +112,7 @@ pipeline:
                     approverInputs: []
         tags: {}
     - stage:
-        name: deployprod
+        name: Production Deployment
         identifier: deployprod
         description: ""
         type: Deployment
