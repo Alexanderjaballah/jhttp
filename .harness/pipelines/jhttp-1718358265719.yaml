@@ -38,15 +38,6 @@ pipeline:
                     repo: alexjaballah/jhttp
                     tags:
                       - <+pipeline.sequenceId>
-              - step:
-                  type: Run
-                  identifier: trivy_scan
-                  name: Security Scan with Trivy
-                  spec:
-                    shell: Sh
-                    command: |-
-                      echo "Starting security scan with Trivy"
-                      trivy image alexjaballah/jhttp:<+pipeline.sequenceId>
           platform:
             os: Linux
             arch: Amd64
