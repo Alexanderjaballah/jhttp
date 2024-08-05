@@ -38,6 +38,21 @@ pipeline:
                     repo: alexjaballah/jhttp
                     tags:
                       - <+pipeline.sequenceId>
+              - step:
+                  type: Semgrep
+                  name: Semgrep_1
+                  identifier: Semgrep_1
+                  spec:
+                    target:
+                      detection: auto
+                      type: repository
+                    advanced:
+                      log:
+                        level: info
+                      args:
+                        cli: ""
+                    mode: orchestration
+                    config: default
           platform:
             os: Linux
             arch: Amd64
